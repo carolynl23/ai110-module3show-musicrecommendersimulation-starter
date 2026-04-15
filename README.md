@@ -74,6 +74,8 @@ Use this section to document the experiments you ran. For example:
 - What happened when you added tempo or valence to the score
 - How did your system behave for different types of users
 
+- different ways to categorize music
+
 ---
 
 ## Limitations and Risks
@@ -88,6 +90,8 @@ Examples:
 
 You will go deeper on this in your model card.
 
+- bias in dataset, more pop than any other category
+
 ---
 
 ## Reflection
@@ -100,6 +104,8 @@ Write 1 to 2 paragraphs here about what you learned:
 
 - about how recommenders turn data into predictions
 - about where bias or unfairness could show up in systems like this
+
+- bias in dataset, overfitting on one genre that is more populat than others
 
 
 ---
