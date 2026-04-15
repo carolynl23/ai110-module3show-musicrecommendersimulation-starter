@@ -38,7 +38,7 @@ You can include a simple diagram or bullet list if helpful.
 1. Create a virtual environment (optional but recommended):
 
    ```bash
-   python -m venv .venv
+   python3 -m venv .venv
    source .venv/bin/activate      # Mac or Linux
    .venv\Scripts\activate         # Windows
 
@@ -51,7 +51,7 @@ pip install -r requirements.txt
 3. Run the app:
 
 ```bash
-python -m src.main
+python3 -m src.main
 ```
 
 ### Running Tests
