@@ -13,7 +13,7 @@ Your goal is to:
 
 Replace this paragraph with your own summary of what your version does.
 
----
+- recommend songs to a user based on their tastes/likes and learn from the user and their music styles change over time
 
 ## How The System Works
 
@@ -29,7 +29,7 @@ Some prompts to answer:
 
 You can include a simple diagram or bullet list if helpful.
 
----
+- each song in the system has the features: genre, mood, energy, tempo
 
 ## Getting Started
 
