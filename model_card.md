@@ -1,6 +1,6 @@
 # 🎧 Model Card: Music Recommender Simulation
 
-## 1. Model Name  
+## 1. Model Name: SongPlay
 
 Give your model a short, descriptive name.  
 Example: **VibeFinder 1.0**  
@@ -17,6 +17,7 @@ Prompts:
 - What assumptions does it make about the user  
 - Is this for real users or classroom exploration  
 
+- SongPlay suggests songs from a small catalog based on a user's preferred genre,mood, target energy level, and acoustic preference. It is designed for classroom exploration of how content-based recommender systems work, not for production use with real users. The system also includes a lightweight adaptive component that boosts genres the user has listened to recently, simulating how a real app might learn from listening history.
 ---
 
 ## 3. How the Model Works  
@@ -31,6 +32,18 @@ Prompts:
 - What changes did you make from the starter logic  
 
 Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+
+- Every song in the catalog has six numerical or categorical attributes: genre, mood,energy (0–1), tempo, acousticness (0–1), valence (emotional positivity, 0–1), and danceability (0–1).
+- Every user has four preference values: a favorite genre, a favorite mood, a target energy level, and a yes/no flag for whether they like acoustic music.
+- To score a song, the model checks each preference against the song's attributes and awards points using fixed weights:
+
+    - Genre match is worth the most (3.0 points) because genre is the strongest signal of taste.
+    - Mood match is worth slightly less (2.5 points) because mood can vary by context even within a favorite genre. 
+    - Energy proximity contributes up to 2.0 points — songs whose energy is closest to the user's target score highest; the penalty grows the further away the energy is.
+    - Acousticness contributes up to 1.5 points depending on whether the user prefers acoustic or electric/produced sounds.
+    - Valence and danceability add small bonuses (1.0 and 0.5 respectively) to break ties in favor of positive, danceable tracks.
+
+- After all weights are summed, the songs are ranked from highest to lowest score and the top-k are returned as recommendations. An adaptive component adds a small bonus (capped at 0.5) for genres the user has been listening to frequently, letting the profile drift toward recent listening patterns over time.
 
 ---
 
