@@ -58,6 +58,11 @@ Prompts:
 - Did you add or remove data  
 - Are there parts of musical taste missing in the dataset  
 
+- the catalog contains 20 songs stored in data/songs.csv. The dataset covers seven genres: pop, lofi, rock, synthwave, ambient, jazz, indie pop, and acoustic.  Moods represented include happy, chill, intense, moody, relaxed, focused, and to a lesser extent neutral. 
+- The catalog was written by hand to illustrate a range of feature combinations. It skews toward pop and lofi (the two largest genre groups) and toward English-language
+- Western popular music. Genres like classical, hip-hop, R&B, country, and non-Western music traditions are entirely absent. The data mostly reflects tastes familiar to a North American or European pop/indie listener.
+- No songs were removed from the starter set; 10 additional songs were added to give the recommender more to work with and to create a second song for each genre.
+
 ---
 
 ## 5. Strengths  
@@ -70,6 +75,10 @@ Prompts:
 - Any patterns you think your scoring captures correctly  
 - Cases where the recommendations matched your intuition  
 
+- Transparent: Every score is the sum of weighted, human-readable rules. There are no hidden layers or black-box transformations.
+- Genre-first users are well served: For a pop fan who wants happy, high-energy tracks the system reliably surfaces the right songs from the catalog.
+- Acoustic vs electric preference is captured explicitly, which is a meaningful dimension that many simple recommenders overlook.
+- Adaptive listening history lets the profile change over time without requiring a full retraining step, just a counter increment.
 ---
 
 ## 6. Limitations and Bias 
@@ -83,6 +92,12 @@ Prompts:
 - Cases where the system overfits to one preference  
 - Ways the scoring might unintentionally favor some users  
 
+- Cold start for non-pop/lofi users: Rock, jazz, ambient, and synthwave each have only two catalog entries. A rock fan will see the same two songs recommended repeatedly.
+- Genre over-dominance: Because genre carries the highest weight (3.0), a user whose favorite genre doesn't match anything in the catalog gets weaker recommendations than deserved.
+- No cross-genre discovery: The system will never recommend a jazz song to a pop fan even if the song has very similar energy and valence. Real listeners often enjoy songs outside their stated genre.
+- Mood is binary: Mood matching is all-or-nothing. A user who likes "happy" gets nothing for "relaxed" even though these are acoustically similar.
+- Demographic gap: The catalog reflects a narrow slice of music culture. A user whose tastes center on hip-hop, K-pop, cumbia, or any unlisted genre effectively gets random recommendations.
+- Filter bubble risk: The adaptive boost reinforces whatever genre the user already listens to most, reducing exposure to new sounds over time.
 ---
 
 ## 7. Evaluation  
@@ -98,6 +113,11 @@ Prompts:
 
 No need for numeric metrics unless you created some.
 
+- three user profiles were tested manually:
+    - pop/happy, lofi/chill, rock/intense
+- the tests confirmed that after similating 6 listens to lofi tracks, the lofi score for a nominally-pop user increased from 2.67 to 2.70, a small but correct directional shift 
+- automated tests: correct ranking order, k-limiting behavior, exmplanation non-emptiness, genre mention in explanations, adaptive score increase after listening
+
 ---
 
 ## 8. Future Work  
@@ -111,6 +131,10 @@ Prompts:
 - Improving diversity among the top results  
 - Handling more complex user tastes  
 
+- Soft genre similarity: Instead of exact genre matching, use a genre similarity matrix so that "indie pop" scores partially for a "pop" user.
+- Mood proximity: Encode mood as a vector (e.g., arousal/valence axes from music psychology) so "happy" and "relaxed" are close while "intense" and "chill" are far.
+- Diversity injection: After ranking by score, swap one or two of the top-k results for songs from underrepresented genres to fight filter bubbles.
+- Collaborative filtering layer: Track which songs users with similar profiles liked and incorporate those signals alongside content features.
 ---
 
 ## 9. Personal Reflection  
@@ -122,3 +146,6 @@ Prompts:
 - What you learned about recommender systems  
 - Something unexpected or interesting you discovered  
 - How this changed the way you think about music recommendation apps  
+
+- Building SongPlay made the abstract idea of a "recommendation algorithm" concrete and surprisingly humbling. Even with only six features and twenty songs, it was easy to accidentally design a system that worked perfectly for pop fans and poorly for everyone else — just because pop was the most represented genre in the catalog. That made it very clear how bias in training data and catalog composition can quietly shape who a system serves well, even when the math itself is fair.
+- The most surprising moment was realizing that the weighted-sum approach never discovers anything genuinely new for the user. A pop fan will always get pop because genre carries the most weight and there is no mechanism to reward novelty or serendipity. Real recommenders like Spotify's Discover Weekly clearly solve this probably by measuring "how different is this song from what you usually hear" as a positive signal, not a penalty. That realization changed how I think about recommendation as a design problem: the goal isn't to find the best match, it's to find the best mix of familiarity and surprise.
